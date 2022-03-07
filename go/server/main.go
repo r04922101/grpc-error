@@ -27,9 +27,18 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 	msg := req.GetMessage()
 	log.Printf("Received a hello message: %s", msg)
 	if msg == "give me an error" {
-		s, _ := status.New(codes.Internal, "error for client").WithDetails(&errdetails.ErrorInfo{
-			Reason: "error occurs as client requested",
-		})
+		s, _ := status.New(codes.Internal, "error for client").WithDetails(
+			&errdetails.ErrorInfo{
+				Reason: "error occurs as client requested",
+			},
+			&errdetails.BadRequest{
+				FieldViolations: []*errdetails.BadRequest_FieldViolation{
+					{
+						Field:       "bad request field",
+						Description: "bad request field description",
+					},
+				},
+			})
 		return nil, s.Err()
 	}
 	return &pb.HelloResponse{Message: "Hello, World"}, nil
