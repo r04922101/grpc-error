@@ -10,6 +10,10 @@ import (
 	"github.com/r04922101/go-grpc-error/pb"
 
 	"google.golang.org/grpc"
+
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -20,7 +24,14 @@ type server struct {
 }
 
 func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
-	log.Printf("Received a hello message: %s", req.GetMessage())
+	msg := req.GetMessage()
+	log.Printf("Received a hello message: %s", msg)
+	if msg == "give me an error" {
+		s, _ := status.New(codes.Internal, "error for client").WithDetails(&errdetails.ErrorInfo{
+			Reason: "error occurs as client requested",
+		})
+		return nil, s.Err()
+	}
 	return &pb.HelloResponse{Message: "Hello, World"}, nil
 }
 

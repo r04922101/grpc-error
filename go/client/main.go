@@ -9,6 +9,7 @@ import (
 	"github.com/r04922101/go-grpc-error/pb"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -32,9 +33,16 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Message: "Hi there"})
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Message: "give me an error"})
 	if err != nil {
-		log.Fatalf("failed to say hello to the server: %v", err)
+		status, ok := status.FromError(err)
+		if !ok {
+			log.Fatalf("failed to say hello to the server without details: %v", err)
+		}
+		for i, d := range status.Proto().Details {
+			log.Printf("server error details %d: %s\n", i, d.GetValue())
+		}
+		log.Fatalf("failed to say hello to the server with details: %v", err)
 	}
 
 	log.Printf("Received server response message: %s", r.GetMessage())
