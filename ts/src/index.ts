@@ -8,7 +8,12 @@ async function main() {
     console.log('Got response from server', resp);
   } catch (err) {
     const grpcError = err as GrpcError;
-    for (const detail of grpcError.details) {
+    console.error(`An error occured with code ${grpcError.code}, message: ${grpcError.message}`);
+    const details = grpcError.details;
+    if (!details) {
+      return;
+    }
+    for (const detail of details) {
       if (detail instanceof ErrorInfo) {
         const errorInfo = detail as ErrorInfo;
         console.error('ErrorInfo');
@@ -18,17 +23,13 @@ async function main() {
         const badRequest = detail as BadRequest;
         console.error('BadRequest');
         for (const fieldViolation of badRequest.getFieldViolationsList()) {
-          console.error(`\tField:${fieldViolation.getField()}, description: ${fieldViolation.getDescription()}`);
+          console.error(`\tField: ${fieldViolation.getField()}, description: ${fieldViolation.getDescription()}`);
         }
       }
     }
   }
 }
 
-main()
-  .then(() => {
-    console.log('main finished');
-  })
-  .catch((err) => {
-    console.error('main error catched: ', err);
-  });
+main().catch((err) => {
+  console.error('main error catched: ', err);
+});
