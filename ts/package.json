@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "repository": "https://github.com/r04922101/grpc-error",
   "author": "Tony Huang",
-  "license": "MIT",
+  "license": "Apache 2.0",
   "scripts": {
     "dev": "ts-node ./src/index.ts",
     "build": "tsc --declaration",
