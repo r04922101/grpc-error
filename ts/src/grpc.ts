@@ -15,6 +15,9 @@ export async function sayHello(message: string) {
   return new Promise((resolve, reject) => {
     client.sayHello(helloReq, (err: grpc.ServiceError | null, resp: HelloResponse) => {
       if (err) {
+        console.error(
+          `grpc package ServiceError code: "${err.code}", details: "${err.details}", message: "${err.message}"`,
+        );
         return reject(new GrpcError(err));
       }
       return resolve(resp.toObject());

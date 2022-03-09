@@ -27,15 +27,15 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 	msg := req.GetMessage()
 	log.Printf("Received a hello message: %s", msg)
 	if msg == "give me an error" {
-		s, _ := status.New(codes.Internal, "error for client").WithDetails(
+		s, _ := status.New(codes.Internal, "error message for client").WithDetails(
 			&errdetails.ErrorInfo{
-				Reason: "error occurs as client requested",
+				Reason: "error detail error info: error occurs as client requested",
 			},
 			&errdetails.BadRequest{
 				FieldViolations: []*errdetails.BadRequest_FieldViolation{
 					{
-						Field:       "bad request field",
-						Description: "bad request field description",
+						Field:       "error detail bad request: bad request field",
+						Description: "error detail bad request: bad request field description",
 					},
 				},
 			})

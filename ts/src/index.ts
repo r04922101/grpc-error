@@ -17,7 +17,7 @@ async function main() {
       if (detail instanceof ErrorInfo) {
         const errorInfo = detail as ErrorInfo;
         console.error('ErrorInfo');
-        console.error(`\tReason ${errorInfo.getReason()}`);
+        console.error(`\tReason: ${errorInfo.getReason()}`);
       }
       if (detail instanceof BadRequest) {
         const badRequest = detail as BadRequest;
